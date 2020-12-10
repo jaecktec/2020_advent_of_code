@@ -26,7 +26,7 @@ performance.mark('B');
 
 const validPassword2 = inputLines.reduce((numValid, it) => {
     const match = lineRegex.exec(it);
-    const passwordArray = [...match[4]];
+    const passwordArray = match[4];
     return passwordArray[parseInt(match[1]) - 1] === match[3] ^ passwordArray[parseInt(match[2]) - 1] === match[3] ? ++numValid : numValid;
 }, 0);
 performance.mark('C');

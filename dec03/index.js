@@ -18,7 +18,7 @@ const inputLines = input.split('\n');
 function traverseMap(stepRight, stepDown){
     let cnt = 0;
     for (let index = 0; index < inputLines.length; index += stepDown) {
-        const element = [...inputLines[index]];
+        const element = inputLines[index];
         const traverse = (stepRight / stepDown * index) % element.length;
         if(element[traverse] === '#') {
             cnt += 1;
