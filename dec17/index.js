@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const input = fs.readFileSync(path.resolve(__dirname, 'input.txt'), 'utf8');
+const input = fs.readFileSync(path.resolve(__dirname, 'test-input.txt'), 'utf8');
 const inputLines = input.split('\n');
 
 const ACTIVE = '#';
@@ -59,15 +59,33 @@ function countActiveNeighbours4d(x, y, z, w, cube) {
     return result;
 }
 
-function println(arg) {
-    console.log(arg);
-}
+const initArr = (size, value) => [...Array(size)].map(() => JSON.parse(JSON.stringify(value)));
 
-function printCube(cube) {
-    println('')
-    for (let z = 0; z < cube.length; z++) {
-        println(`z=${z - (Math.floor(cube.length / 2))}`)
-        console.table(cube[z]);
+function printCube3D(cube, dims) {
+    console.log('')
+    // z, y, x
+    const printableCube = initArr(
+        dims[2][1] - dims[2][0],
+        initArr(
+            dims[1][1] - dims[1][0],
+            initArr(
+                dims[0][1] - dims[0][0],
+                '.'
+            )));
+    const keys = cube.keys();
+    let hasNext;
+    do {
+        const {value, done} = keys.next();
+        hasNext = !done;
+        if(hasNext){
+            const [x, y, z] = value.split(',');
+            printableCube[parseInt(z) - dims[2][0]][parseInt(y) - dims[1][0]][parseInt(x) - dims[0][0]] = ACTIVE;
+        }
+    } while (hasNext);
+
+    for (let z = 0; z < printableCube.length; z++) {
+        console.log(`z=${z - (Math.floor(printableCube.length / 2))}`)
+        console.table(printableCube[z]);
     }
 }
 
@@ -91,6 +109,8 @@ function solve1(data) {
         [0, 1]
     ];
 
+    printCube3D(cube, dims);
+
     for (let cycle = 1; cycle <= CYCLES; cycle++) {
         let newCube = new Map();
         // increment dimensions
@@ -112,6 +132,7 @@ function solve1(data) {
                 }
             }
         }
+        printCube3D(newCube, dims);
         cube = newCube;
     }
     return cube.size
@@ -165,5 +186,5 @@ function solve2(data) {
     return cube.size
 }
 
-// console.log(solve1(inputLines));
-console.log(solve2(inputLines));
+console.log(solve1(inputLines));
+// console.log(solve2(inputLines));
