@@ -19,6 +19,10 @@ function unique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
+function print(arg){
+    process.stdout.write(arg);
+}
+
 
 function solve1(data) {
 
